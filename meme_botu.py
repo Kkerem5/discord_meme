@@ -2,7 +2,7 @@ import discord
 import random 
 import os 
 from discord.ext import commands
-
+import requests
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -10,7 +10,11 @@ intents.message_content = True
 bot=commands.Bot(command_prefix='/', intents = intents)
 
 
-
+def get_dog_image_url():
+    url = 'https://random.dog/woof.json'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
 
 @bot.event
 async def on_ready():
@@ -24,5 +28,10 @@ async def mem(ctx):
         picture = discord.File(f)
     await ctx.send(file=picture)
 
+@bot.command(name='köpek')
+async def dog(ctx):
+   
+    image_url = get_dog_image_url()
+    await ctx.send(image_url)
 
 bot.run("<token>")
